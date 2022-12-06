@@ -1,0 +1,39 @@
+<diagram program="umletino" version="15.0.0"><zoom_level>10</zoom_level><element><id>UMLClass</id><coordinates><x>20</x><y>130</y><w>210</w><h>190</h></coordinates><panel_attributes>Shelf
+--
+
+- name: string
+- path: string
+- comicCount: int
+- comics: List&lt;Comic&gt;
+
+--
+
+#Operation(i: int): int
+/+AbstractOperation()/
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>20</x><y>430</y><w>210</w><h>190</h></coordinates><panel_attributes>Comic
+--
+
+- name: string
+- path: string
+- pages: List&lt;Page&gt;
+- pageCount: int
+- currentPage: int
+
+--
+
+#Operation(i: int): int
+/+AbstractOperation()/
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>90</x><y>310</y><w>50</w><h>140</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes><additional_attributes>30;120;10;60;30;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>270</x><y>280</y><w>210</w><h>190</h></coordinates><panel_attributes>Comic
+--
+
+- name: string
+- path: string
+- pages: List&lt;Page&gt;
+- pageCount: int
+- currentPage: int
+
+--
+
+#Operation(i: int): int
+/+AbstractOperation()/
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>220</x><y>460</y><w>130</w><h>130</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes><additional_attributes>110;10;80;80;10;110</additional_attributes></element></diagram>
