@@ -1,4 +1,4 @@
-package edu.grimalkin.UI;
+package edu.grimalkin.ui;
 
 import java.awt.*;
 import java.awt.event.*;

@@ -1,8 +1,9 @@
 package edu.grimalkin;
 
-import edu.grimalkin.UI.MainWindow;
 // import com.formdev.flatlaf.intellijthemes.FlatNordIJTheme;
 import com.formdev.flatlaf.intellijthemes.FlatOneDarkIJTheme;
+
+import edu.grimalkin.ui.MainWindow;
 
 
 public class App {
@@ -15,6 +16,7 @@ public class App {
 
     public App() {
         MainWindow MainWindow = new MainWindow(APP_NAME + " " + APP_VERSION);
+        MainWindow.setVisible(true);
     }
 
     public String getAppName() {return APP_NAME;}

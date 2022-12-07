@@ -21,9 +21,6 @@ Usage screenshots TBA.
 ## Support
 TBA
 
-## Roadmap
--
-
 ## Contributing
 TBA
 

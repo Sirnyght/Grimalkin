@@ -1,16 +1,15 @@
-package edu.grimalkin.UI;
+package edu.grimalkin.ui;
 
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.border.*;
-import javax.swing.filechooser.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.File;
 
 
 // import net.miginfocom.swing.*;
 // import net.miginfocom.layout.*;
-import edu.grimalkin.data.Comic;
 import edu.grimalkin.util.JTabbedPaneCloseButton;
 
 public class MainWindow extends JFrame {
@@ -23,7 +22,7 @@ public class MainWindow extends JFrame {
     }
 
     private void initWindow(String title) {
-        setTitle("Grimalkin");
+        setTitle(title);
 		//set icon to /icons/chat3.png
 		setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/chat3.png")));
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -31,7 +30,6 @@ public class MainWindow extends JFrame {
         setSize(800, 600);
         setLocationRelativeTo(null);
         setResizable(true);
-        setVisible(true);
     }
 
     private void initMenuBar() {
@@ -348,6 +346,9 @@ public class MainWindow extends JFrame {
 			System.out.println("Opening: " + file.getName() + ".");
 		}
 		else {
+			// return exception class
+			// throw new Exception("No file selected.");
+
 			// do nothing
 		}
 	}

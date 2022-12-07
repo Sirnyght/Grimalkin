@@ -2,7 +2,6 @@ package edu.grimalkin.data;
 
 import java.util.*;
 
-
 public class Shelf {
     private String name;
     private String path;
