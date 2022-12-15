@@ -27,11 +27,11 @@ TODO:
 
 ## Visuals
 Here are some screenshots of the application:
-![Application startup page](https://imgur.com/a/JTyrfn3)*The application startup page*
+![Application startup page](https://i.imgur.com/8vx2Pkf.png)*The application startup page*
 
-![Comic view page](https://imgur.com/MKtsvKA)*A comic opened in the application*
+![Comic view page](https://i.imgur.com/MKtsvKA.png)*A comic opened in the application*
 
-![Fullscreen comic view](https://imgur.com/AQ80coI)*A comic opened in fullscreen mode*
+![Fullscreen comic view](hhttps://i.imgur.com/AQ80coI.png)*A comic opened in fullscreen mode*
 
 ## Installation
 Download the repository, including the library folder, then using your favorite IDE, compile and run the project.
