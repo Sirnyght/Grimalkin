@@ -32,6 +32,7 @@ public class App {
                 System.exit(0);
             }
         });
+
         MainWindow.setVisible(true);
     }
 

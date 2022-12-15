@@ -100,6 +100,16 @@ public class MainWindow extends JFrame {
         setSize(1200, 800);
         setLocationRelativeTo(null);
         setResizable(true);
+		setVisible(true);
+		setFocusable(true);
+		// add key event listener
+		addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				// call key event method
+				keyIsPressed(e);
+			}
+		});
     }
 
 	/**
@@ -588,7 +598,35 @@ public class MainWindow extends JFrame {
 				}
 			}
 		});
-
+		// Add event listener to comic page label, on mouse wheel scroll while CTRL is pressed
+		// Ajouté après la revue du 15/12/2022 à 10h 
+		comicPageLabel.addMouseWheelListener(new MouseWheelListener() {
+			@Override
+			public void mouseWheelMoved(MouseWheelEvent e) {
+				// if CTRL is pressed
+				if (e.isControlDown()) {
+					// Get Comic Page Image
+					// Get tab pane
+					JTabbedPane tabbedPane = (JTabbedPane) comicPagePanel.getParent().getParent().getParent().getParent();
+					// Get tab name
+					String tabName = tabbedPane.getTitleAt(tabbedPane.getSelectedIndex());
+					// Get Comic
+					Comic comic = library.getComic(tabName);
+					// Get Comic Page
+					Page page = comic.getPages().get(comic.getCurrentPage());
+					ImageIcon icon = new ImageIcon(page.getImage());
+					// Resize only image width and keep aspect ratio	
+					Image img = icon.getImage();
+					Image newimg = img.getScaledInstance(comicPageLabel.getWidth()+(e.getWheelRotation()*500), -1,  java.awt.Image.SCALE_SMOOTH);
+					icon = new ImageIcon(newimg);
+					// Set Comic Page Label Icon
+					comicPageLabel.setIcon(icon);
+					// Update Comic Page Label
+					comicPageLabel.revalidate();
+					comicPageLabel.repaint();
+				}
+			}
+		});
 		// Set Comic Page Label Icon
 		comicPageLabel.setIcon(icon);
 		// Add Comic Page Label to Comic Page Panel
@@ -749,10 +787,8 @@ public class MainWindow extends JFrame {
 	private void noRotationActionPerformed() {
 		// get selected tab
 		int selectedTab = rightPane.getSelectedIndex();
-		// get image icon from selected tab
-		ImageIcon icon = (ImageIcon) ((JLabel) ((JScrollPane) ((JPanel) rightPane.getComponentAt(selectedTab)).getComponent(0)).getViewport().getView()).getIcon();
-		// set image icon to corresponding comic current page
-		library.getComic(rightPane.getTitleAt(selectedTab)).getPages().get(library.getComic(rightPane.getTitleAt(selectedTab)).getCurrentPage()).setImage(icon.getImage());	
+		// set image icon to original image icon
+		((JLabel) ((JPanel) ((JScrollPane) ((JPanel) rightPane.getComponentAt(selectedTab)).getComponent(0)).getViewport().getView()).getComponent(0)).setIcon(((JLabel) ((JPanel) ((JScrollPane) ((JPanel) rightPane.getComponentAt(selectedTab)).getComponent(0)).getViewport().getView()).getComponent(0)).getIcon());
 	}
 
 	/**
@@ -774,20 +810,24 @@ public class MainWindow extends JFrame {
 		ImageIcon icon = (ImageIcon) imageLabel.getIcon();
 		// rotate image icon by e degrees
 		Image img = icon.getImage();
-		Image newimg = img.getScaledInstance(img.getWidth(null), img.getHeight(null),  java.awt.Image.SCALE_SMOOTH);
+		int width = img.getWidth(null);
+		int height = img.getHeight(null); 
+		System.out.println(width + " " + height);
 		// put newimg in a buffered image
-		BufferedImage bimage = new BufferedImage(newimg.getWidth(null), newimg.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+		BufferedImage bimage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 		AffineTransform tx = new AffineTransform();
 		if (e.getActionCommand().equals("90°")) {
-			tx.rotate(Math.toRadians(90), newimg.getWidth(null)/2, newimg.getHeight(null)/2);
+			tx.rotate(Math.toRadians(90), width/2, height/2);
 		} else if (e.getActionCommand().equals("180°")) {
-			tx.rotate(Math.toRadians(180), newimg.getWidth(null)/2, newimg.getHeight(null)/2);
+			tx.rotate(Math.toRadians(180), width/2, height/2);
 		} else if (e.getActionCommand().equals("270°")) {
-			tx.rotate(Math.toRadians(270), newimg.getWidth(null)/2, newimg.getHeight(null)/2);
+			tx.rotate(Math.toRadians(270), width/2, height/2);
 		}
 		AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);
-		newimg = op.filter(bimage, null);
-		icon = new ImageIcon(newimg);
+		BufferedImage out = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+		op.filter(bimage, out);
+		img = out;
+		icon = new ImageIcon(img);
 		// update image icon
 		imageLabel.setIcon(icon);
 	}
@@ -1337,15 +1377,19 @@ public class MainWindow extends JFrame {
 	}
 	
 	/** 
-	 * Méthode de changer de page en appuyant sur les flèches du clavier
+	 * Méthode de changer de page en appuyant sur les flèches du clavier.
+	 * Note : cette méthode a été patchée après la revue du 15/12/2022 le matin.
 	 * @param e Evenement de pression d'une touche du clavier
 	 */
-	public void keyPressed(KeyEvent e) {
-		System.out.println(e.getKeyCode());
+	public void keyIsPressed(KeyEvent e) {
+		
 		// get selected tab
 		int selectedTab = rightPane.getSelectedIndex();
 		// get selected tab title
 		String selectedTabTitle = rightPane.getTitleAt(selectedTab);
+		if (selectedTabTitle.equals("Quickstart")) {
+			return;
+		}
 		// get comic
 		Comic comic = library.getComic(selectedTabTitle);
 		// get key code
