@@ -9,8 +9,6 @@ import com.google.gson.*;
 import edu.grimalkin.data.Library;
 
 /**
- * @author Dimitri
- * @version 1.0
  * Classe utilitaire pour la manipulation de fichiers JSON
  * La classe encapsule plusieurs méthodes permettant de manipuler les données d'un fichier JSON.
  * La classe utilise la librairie JSON.simple.
@@ -62,21 +60,4 @@ public class JSONUtil {
         Library library = gson.fromJson(content, Library.class);
         return library;
     }
-
-    // main
-    // public static void main(String[] args) {
-    //     try {
-    //         Library library = new Library();
-    //         Comic comic = new Comic();
-    //         comic.setId("1");
-    //         comic.setTitle("GOTCHA");
-    //         library.addComic(comic);
-    //         writeJSONFile(library);
-
-    //         Library library2 = readJSONFile();
-    //         System.out.println(library2.getComic("1").getTitle());
-    //     } catch (IOException e) {
-    //         e.printStackTrace();
-    //     }
-    // }
 }

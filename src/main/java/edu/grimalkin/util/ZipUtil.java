@@ -14,11 +14,12 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import javax.imageio.ImageIO;
 
+import com.github.junrar.Junrar;
+import com.github.junrar.exception.RarException;
+
 import edu.grimalkin.data.Page;
 
 /**
- * @author Dimitri
- * @version 1.5
  * Classe utilitaire pour la compression et la décompression de fichiers.
  * La classe encapsule plusieurs méthodes permettant de manipuler les données d'un fichier compressé.
  * La classe utilise la librairie Apache Commons Compress.
@@ -104,6 +105,31 @@ public class ZipUtil {
                     // add image to comic
                     // cut off the file extension
                     String id = entry.getName().substring(0, entry.getName().lastIndexOf("."));
+                    destination.add(new Page(id, image.getWidth(null), image.getHeight(null), image));
+                }
+            }
+        }
+    }
+
+    public static void unrar(File source, List<Page> destination) throws IOException, RarException {
+        Junrar.extract(source, source.getParentFile());
+        File[] files = source.getParentFile().listFiles();
+        for (File file : files) {
+            if (file.getName().endsWith(".jpg") || file.getName().endsWith(".png")) {
+                ImageIO.setUseCache(false);
+                // write entry to image object
+                try (InputStream in = file.toURI().toURL().openStream();
+                    OutputStream out = new ByteArrayOutputStream()) {
+                    byte[] buffer = new byte[1024];
+                    int len;
+                    while ((len = in.read(buffer)) >= 0) {
+                        out.write(buffer, 0, len);
+                    }
+                    // convert output stream to buffered image
+                    Image image = Toolkit.getDefaultToolkit().createImage(((ByteArrayOutputStream) out).toByteArray());
+                    // add image to comic
+                    // cut off the file extension
+                    String id = file.getName().substring(0, file.getName().lastIndexOf("."));
                     destination.add(new Page(id, image.getWidth(null), image.getHeight(null), image));
                 }
             }

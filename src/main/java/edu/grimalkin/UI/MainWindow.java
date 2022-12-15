@@ -3,21 +3,27 @@ package edu.grimalkin.ui;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
 import java.awt.image.AffineTransformOp;
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import javax.swing.filechooser.FileNameExtensionFilter;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.ArrayList;
-import java.awt.image.BufferedImage;
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
+import com.github.junrar.exception.RarException;
 
 import edu.grimalkin.util.ZipUtil;
 import edu.grimalkin.util.JSONUtil;
 import edu.grimalkin.data.*;
 
+/**
+ * Une classe "MainWindow" représentant la fenêtre principale de l'application
+ * La classe encapsule plusieurs méthodes permettant de manipuler les données de la fenêtre principale.
+ * Une sélection d'objets Swing est mise en place pour permettre une manipulation plus aisée des composants de la fenêtre.
+ */
 public class MainWindow extends JFrame {
 	private Library library; 
 	private JSplitPane splitPane = new JSplitPane();
@@ -51,6 +57,10 @@ public class MainWindow extends JFrame {
 		"About: Ctrl + A"
 	});
 
+	/**
+	 * Constructeur de la classe MainWindow
+	 * @param title
+	 */
     public MainWindow(String title) {
 		try {
 			library = JSONUtil.readJSONFile();
@@ -65,6 +75,10 @@ public class MainWindow extends JFrame {
 		initContent();
     }
  
+	/**
+	 * Méthode permettant d'initialiser la fenêtre principale
+	 * @param title
+	 */
     private void initWindow(String title) {
         setTitle(title);
 		//set icon to /icons/chat3.png
@@ -76,6 +90,9 @@ public class MainWindow extends JFrame {
         setResizable(true);
     }
 
+	/**
+	 * Méthode permettant d'initialiser la barre de menu
+	 */
     private void initMenuBar() {
 		// Components initialization
 		JMenuBar menuBar = new JMenuBar();
@@ -95,14 +112,9 @@ public class MainWindow extends JFrame {
 		JMenuItem nextPageMenuItem = new JMenuItem();
 		JMenuItem lastPageMenuItem = new JMenuItem();
 		JMenu viewMenu = new JMenu();
-		// JMenu pageLayoutMenu = new JMenu();
 		JMenuItem originalFitMenuItem = new JMenuItem();
 		JMenuItem fitToWidthMenuItem = new JMenuItem();
 		JMenuItem fitToHeightMenuItem = new JMenuItem();
-		// JMenuItem fitToScreenMenuItem = new JMenuItem();
-		// JMenuItem singlePageMenuItem = new JMenuItem();
-		// JMenuItem doublePageMenuItem = new JMenuItem();
-		// JMenuItem rightToLeftMenuItem = new JMenuItem();
 		JMenu zoomMenu = new JMenu();
 		JMenuItem zoomInMenuItem = new JMenuItem();
 		JMenuItem zoomOutMenuItem = new JMenuItem();
@@ -301,7 +313,57 @@ public class MainWindow extends JFrame {
 			setJMenuBar(menuBar); 
 		}
     }
+
+	/** 
+	 * Mise en place des composants du panneau de gauche de l'interface graphique
+	 */
+	private void leftPaneSetup() {
+		// add library panel and comic pages panel to left pane
+		leftPane.addTab("Library", libraryPanel);
+		// leftPane.addTab("Pages", comicPagesPanel);
+		libraryPanel.setLayout(new BorderLayout());
+		libraryPanel.add(libraryScrollPane, BorderLayout.CENTER);
+		libraryScrollPane.setViewportView(thumbnailsPanel);
+		// setup scroll bars
+		libraryScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		libraryScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		// speed up scrolling
+		libraryScrollPane.getVerticalScrollBar().setUnitIncrement(16);
+		// set layout for thumbnails panel;
+		thumbnailsPanel.setLayout(new FlowLayout());
+		// set thumbnailsPanel container size
+		thumbnailsPanel.setPreferredSize(new Dimension(180, 0));
+		// load library
+		// for each comic in library
+		for (Comic comic : library.getComics()) {
+			displayThumbnail(comic, thumbnailsPanel);
+		}
+		splitPane.setLeftComponent(leftPane);
+	}
+
+	/** 
+	 * Mise en place des composants du panneau de droite de l'interface graphique
+	 */
+	private void rightPaneSetup() {
+		// add focus page panel to right pane
+		rightPane.addTab("Quickstart", quickstartPanel);
+
+		// set titled border
+		quickstartPanel.setLayout(new BorderLayout());
+		// List shortcuts on Quickstart tab
+		shortcutsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		shortcutsList.setLayoutOrientation(JList.VERTICAL);
+		shortcutsList.setVisibleRowCount(-1);
+		quickstartPanel.add(new JScrollPane(shortcutsList), BorderLayout.CENTER);
+		splitPane.setRightComponent(rightPane);	
+	}
 	
+	/**
+	 * Méthode permettant d'initialiser le contenu de la fenêtre
+	 * Appelle les méthodes de mise en place des composants de l'interface graphique
+	 * @see #leftPaneSetup()
+	 * @see #rightPaneSetup()
+	 */
 	private void initContent() {
 		splitPane.setBorder(new EmptyBorder(10, 10, 10, 10));
 		splitPane.setResizeWeight(0.2);
@@ -309,46 +371,16 @@ public class MainWindow extends JFrame {
 		getContentPane().add(splitPane, BorderLayout.CENTER);
 
 		// Left Panel Setup
-		{	
-			// add library panel and comic pages panel to left pane
-			leftPane.addTab("Library", libraryPanel);
-			// leftPane.addTab("Pages", comicPagesPanel);
-			libraryPanel.setLayout(new BorderLayout());
-			libraryPanel.add(libraryScrollPane, BorderLayout.CENTER);
-			libraryScrollPane.setViewportView(thumbnailsPanel);
-			// setup scroll bars
-			libraryScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-			libraryScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-			// speed up scrolling
-			libraryScrollPane.getVerticalScrollBar().setUnitIncrement(16);
-			// set layout for thumbnails panel;
-			thumbnailsPanel.setLayout(new FlowLayout());
-			// set thumbnailsPanel container size
-			thumbnailsPanel.setPreferredSize(new Dimension(180, 0));
-			// load library
-			// for each comic in library
-			for (Comic comic : library.getComics()) {
-				displayThumbnail(comic, thumbnailsPanel);
-			}
-		}
-		splitPane.setLeftComponent(leftPane);
-
+		leftPaneSetup();
+		
 		// Right Panel Setup
-		{
-			// add focus page panel to right pane
-			rightPane.addTab("Quickstart", quickstartPanel);
-
-			// set titled border
-			quickstartPanel.setLayout(new BorderLayout());
-			// List shortcuts on Quickstart tab
-			shortcutsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-			shortcutsList.setLayoutOrientation(JList.VERTICAL);
-			shortcutsList.setVisibleRowCount(-1);
-			quickstartPanel.add(new JScrollPane(shortcutsList), BorderLayout.CENTER);
-		}
-		splitPane.setRightComponent(rightPane);		
+		rightPaneSetup();
 	}
 
+	/**
+	 * Méthode permettant de mettre à jour la bibliothèque de comics en sauvegardant les modifications dans le fichier JSON
+	 * @see JSONUtil#writeJSONFile(Library)
+	 */
 	private void updateLibrary() {
 		try {
 			JSONUtil.writeJSONFile(library);
@@ -358,6 +390,12 @@ public class MainWindow extends JFrame {
 		}
 	}
 
+	/**
+	 * Méthode permettant de mettre à jour un comic dans la bibliothèque
+	 * @param title Titre du comic à mettre à jour
+	 * @param currentPage Page courante du comic
+	 * @see #updateLibrary()
+	 */
 	private void updateComic(String title, int currentPage) {
 		Comic comic = library.getComic(title);
 		comic.setCurrentPage(currentPage);
@@ -366,6 +404,12 @@ public class MainWindow extends JFrame {
 		updateLibrary();
 	}
 
+
+	/**
+	 * Méthode permettant d'afficher un comic dans le panneau de droite
+	 * @param comic Comic à afficher
+	 * @see #updateComic(String, int)
+	 */
 	private void displayThumbnail(Comic comic, JPanel thumbnailsPanel) {
 		// Create new thumbnail
 		JLabel thumbnail = new JLabel();
@@ -430,6 +474,13 @@ public class MainWindow extends JFrame {
 		thumbnailsPanel.repaint();
 	}
 
+	/**
+	 * Méthode permettant d'afficher une page dans le panneau de droite
+	 * @param page Page à afficher
+	 * @param comicPagePanel Panneau de droite
+	 * @see #displayThumbnail(Comic, JPanel)
+	 * @see #displayPage(Page, JPanel)
+	 */
 	private void displayPage(Page page, JPanel comicPagePanel) {
 		// Get Scroll Pane
 		// Remove all components from comicPagePanel
@@ -507,7 +558,15 @@ public class MainWindow extends JFrame {
 	}
 	
 
-
+	/**
+	 * Méthode permettant d'afficher une page dans le panneau de droite
+	 * @param page Page à afficher
+	 * @param comicPagePanel Panneau de droite
+	 * @see ZipUtil#unzip(File, List<Page>)
+	 * @see ZipUtil#unrar(File, List<Page>)
+	 * @see #displayThumbnail(Comic, JPanel)
+	 * @see #displayPage(Page, JPanel)
+	 */
 	private void openActionPerformed() {
 		JFileChooser fileChooser = new JFileChooser();
 		FileNameExtensionFilter filter = new FileNameExtensionFilter("Comic Book Archive (.cbz, .cbr)", "cbz", "cbr");
@@ -552,11 +611,17 @@ public class MainWindow extends JFrame {
 			newTab.add(comicPageScrollPane, BorderLayout.CENTER);
 			try {
 				List<Page> pages = new ArrayList<Page>();
-				ZipUtil.unzip(file, pages);
+				if (file.getName().endsWith(".cbz")) {
+					ZipUtil.unzip(file, pages);
+				} else if (file.getName().endsWith(".cbr")) {
+					ZipUtil.unrar(file, pages);
+				}
 				Comic unzippedComic = new Comic(file.getName(), file.getAbsolutePath(), pages);
 				library.addComic(unzippedComic);
 				updateLibrary();
 			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (RarException e) {
 				e.printStackTrace();
 			}
 			// Display New Comic in Library
@@ -580,6 +645,11 @@ public class MainWindow extends JFrame {
 		}
 	}
 
+    /**
+	 * Méthode permettant de ferme une page dans le panneau de droite
+	 * Sauvegarde la page courante du comic
+	 * @see #updateComic(String, int)
+	 */
 	private void closeActionPerformed() {
 		// get selected tab 
 		int selectedTab = rightPane.getSelectedIndex();
@@ -592,6 +662,11 @@ public class MainWindow extends JFrame {
 
 	}
 
+	/**
+	 * Méthode permettant de fermer toutes les pages dans le panneau de droite ainsi que la fenêtre
+	 * Sauvegarde la page courante de chaque comic
+	 * @see #closeAllTabs()
+	 */
 	private void exitActionPerformed() {
 		// Close all tabs
 		closeAllTabs();
@@ -599,6 +674,9 @@ public class MainWindow extends JFrame {
 		System.exit(0);
 	}
 
+	/**
+	 * Méthode permettant d'annuler la rotation d'une page
+	 */
 	private void noRotationActionPerformed() {
 		// get selected tab
 		int selectedTab = rightPane.getSelectedIndex();
@@ -608,6 +686,10 @@ public class MainWindow extends JFrame {
 		library.getComic(rightPane.getTitleAt(selectedTab)).getPages().get(library.getComic(rightPane.getTitleAt(selectedTab)).getCurrentPage()).setImage(icon.getImage());	
 	}
 
+	/**
+	 * Méthode permettant de faire une rotation d'une page de e degrés
+	 * @param e ActionEvent
+	 */
 	private void RotationActionPerformed(ActionEvent e) {
 		// get selected tab
 		int selectedTab = rightPane.getSelectedIndex();
@@ -625,6 +707,12 @@ public class MainWindow extends JFrame {
 		((JLabel) ((JScrollPane) ((JPanel) rightPane.getComponentAt(selectedTab)).getComponent(0)).getViewport().getView()).setIcon(icon);
 	}
 
+	/**
+	 * Méthode permettant de passer à la page suivante
+	 * Sauvegarde la page courante du comic
+	 * @see #updateComic(String, int)
+	 * @see Comic#nextPage()
+	 */
 	private void nextPageActionPerformed() {
 		// get selected tab
 		int selectedTab = rightPane.getSelectedIndex();
@@ -658,6 +746,12 @@ public class MainWindow extends JFrame {
 		updateComic(selectedTabTitle, comic.getCurrentPage());
 	}
 
+	/**
+	 * Méthode permettant de passer à la page précédente
+	 * Sauvegarde la page courante du comic
+	 * @see #updateComic(String, int)
+	 * @see Comic#previousPage()
+	 */
 	private void previousPageActionPerformed() {
 		// get selected tab
 		int selectedTab = rightPane.getSelectedIndex();
@@ -691,6 +785,12 @@ public class MainWindow extends JFrame {
 		updateComic(selectedTabTitle, comic.getCurrentPage());
 	}
 
+	/**
+	 * Méthode permettant de passer à la première page
+	 * Sauvegarde la page courante du comic
+	 * @see #updateComic(String, int)
+	 * @see Comic#setCurrentPage(int)
+	 */
 	private void goToFirstPageActionPerformed() {
 		// get selected tab
 		int selectedTab = rightPane.getSelectedIndex();
@@ -724,6 +824,12 @@ public class MainWindow extends JFrame {
 		updateComic(selectedTabTitle, comic.getCurrentPage());
 	}
 
+	/**
+	 * Méthode permettant de passer à la dernière page
+	 * Sauvegarde la page courante du comic
+	 * @see #updateComic(String, int)
+	 * @see Comic#setCurrentPage(int)
+	 */
 	private void goToLastPageActionPerformed() {
 		// get selected tab
 		int selectedTab = rightPane.getSelectedIndex();
@@ -757,6 +863,9 @@ public class MainWindow extends JFrame {
 		updateComic(selectedTabTitle, comic.getCurrentPage());
 	}
 
+	/**
+	 * Méthode permettant le zoom avant sur la page courante de l'onglet sélectionné
+	 */
 	private void zoomInActionPerformed() {
 		// get selected tab
 		int selectedTab = rightPane.getSelectedIndex();
@@ -784,6 +893,9 @@ public class MainWindow extends JFrame {
 		comicPagePanel.repaint();
 	}
 
+	/**
+	 * Méthode permettant le zoom arrière sur la page courante de l'onglet sélectionné
+	 */
 	private void zoomOutActionPerformed() {
 		// get selected tab
 		int selectedTab = rightPane.getSelectedIndex();
@@ -811,6 +923,9 @@ public class MainWindow extends JFrame {
 		comicPagePanel.repaint();
 	}
 
+	/**
+	 * Méthode permettant de zoomer sur la page courante de l'onglet sélectionné
+	 */
 	private void customZoomActionPerformed() {
 		// get selected tab
 		int selectedTab = rightPane.getSelectedIndex();
@@ -840,6 +955,9 @@ public class MainWindow extends JFrame {
 		comicPagePanel.repaint();
 	}
 
+	/**
+	 * Méthode permettant de mettre la page courante de l'onglet sélectionné à la taille la largeur de l'onglet
+	 */
 	private void fitToWidthActionPerformed() {
 		// get selected tab
 		int selectedTab = rightPane.getSelectedIndex();
@@ -885,6 +1003,9 @@ public class MainWindow extends JFrame {
 		comicPagePanel.repaint();
 	}
 
+	/**
+	 * Méthode permettant de mettre la page courante de l'onglet sélectionné à la taille la hauteur de l'onglet
+	 */
 	private void fitToHeightActionPerformed() {
 		// get selected tab
 		int selectedTab = rightPane.getSelectedIndex();
@@ -930,6 +1051,9 @@ public class MainWindow extends JFrame {
 		comicPagePanel.repaint();
 	}
 
+	/**
+	 * Méthode permettant de mettre la page courante de l'onglet sélectionné à sa taille originale
+	 */
 	private void originalFitActionPerformed() {
 		// get selected tab
 		int selectedTab = rightPane.getSelectedIndex();
@@ -957,6 +1081,9 @@ public class MainWindow extends JFrame {
 		comicPagePanel.repaint();
 	}
 
+	/**
+	 * Méthode permettant de mettre la page courante de l'onglet sélectionné à la taille de l'écran
+	 */
 	private void shortcutsActionPerformed() {
 		// create shortcuts dialog
 		JDialog shortcutsDialog = new JDialog();
@@ -984,6 +1111,9 @@ public class MainWindow extends JFrame {
 		shortcutsDialog.setVisible(true);
 	}
 
+	/**
+	 * Méthode permettant de mettre la page courante de l'onglet sélectionné à la taille de l'écran
+	 */
 	private void aboutActionPerformed() {
 		// create about dialog
 		JDialog aboutDialog = new JDialog();
@@ -1015,6 +1145,10 @@ public class MainWindow extends JFrame {
 		aboutDialog.setVisible(true);
 	}
 
+	/**
+	 * Méthode permettant de fermer tous les onglets en sauvegardant leur page courante, sauf pour l'onglet "Quickstart".
+	 * Cette méthode est appelée lors de la fermeture de l'application.
+	 */
 	private void closeAllTabs() {
 		// go through all tabs
 		for (int i = 0; i < rightPane.getTabCount(); i++) {
@@ -1031,6 +1165,17 @@ public class MainWindow extends JFrame {
 		}
 	}
 
-
-
+	/**
+	 * Méthode permettant de mettre à jour la bibliothèque en sauvegardant les informations de chaque comic.
+	 * Cette méthode est appelée lors de la fermeture de l'application.
+	 */
+	public void windowClosing(WindowEvent e) {
+		// save library
+		updateLibrary();
+		// close all tabs
+		closeAllTabs();
+		// dispose frame
+		dispose();
+	}
+	
 }

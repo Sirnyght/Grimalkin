@@ -6,9 +6,12 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseEvent;
 
 /**
- * @author 6dc
- *
- * A class which creates a JTabbedPane and auto sets a close button when you add a tab
+ * Une classe "JTabbedPaneCloseButton" permettant d'ajouter un bouton de fermeture à un JTabbedPane
+ * La classe hérite de JTabbedPane
+ * @see JTabbedPane https://docs.oracle.com/javase/7/docs/api/javax/swing/JTabbedPane.html
+ * @see JTabbedPaneCloseButton https://gist.github.com/6dc/0c8926f85d701a869bb2
+ * @author Original code by 6dc
+ * @author Small changes by me
  */
 public class JTabbedPaneCloseButton extends JTabbedPane {
 
@@ -16,7 +19,9 @@ public class JTabbedPaneCloseButton extends JTabbedPane {
         super();
     }
 
-    /* Override Addtab in order to add the close Button everytime */
+    /** 
+     * Override de AddTab pour ajouter un bouton de fermeture à chaque onglet
+     */ 
     @Override
     public void addTab(String title, Icon icon, Component component, String tip) {
         super.addTab(title, icon, component, tip);
@@ -34,7 +39,13 @@ public class JTabbedPaneCloseButton extends JTabbedPane {
         addTab(title, null, component);
     }
 
-    /* addTabNoExit */
+    /**
+     * Méthode permettant d'ajouter un onglet sans bouton de fermeture
+     * @param title
+     * @param icon
+     * @param component
+     * @param tip
+     */
     public void addTabNoExit(String title, Icon icon, Component component, String tip) {
         super.addTab(title, icon, component, tip);
     }
@@ -47,7 +58,11 @@ public class JTabbedPaneCloseButton extends JTabbedPane {
         addTabNoExit(title, null, component);
     }
 
-    /* Button */
+    /**
+     * Une classe "CloseButtonTab" permettant d'ajouter un bouton de fermeture à un onglet
+     * La classe hérite de JPanel
+     * @see JPanel https://docs.oracle.com/javase/7/docs/api/javax/swing/JPanel.html
+     */
     public class CloseButtonTab extends JPanel {
         private Component tab;
 
@@ -98,7 +113,11 @@ public class JTabbedPaneCloseButton extends JTabbedPane {
             add(button);
         }
     }
-    /* ClickListener */
+    /**
+     * Une classe "CloseListener" permettant de fermer un onglet
+     * La classe implémente l'interface MouseListener
+     * @see MouseListener https://docs.oracle.com/javase/7/docs/api/java/awt/event/MouseListener.html
+     */
     public class CloseListener implements MouseListener
     {
         private Component tab;

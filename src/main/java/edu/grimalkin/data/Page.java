@@ -7,8 +7,7 @@ import java.awt.image.BufferedImage;
 
 
 /**
- * @author Laure
- * @version 1.1
+
  * Une classe "Page" représentant une page d'un comic book (Bande dessinée, comic US, manga, etc.)
  * Une page est composée d'une image (Image.java)
  * La classe encapsule plusieurs méthodes permettant de manipuler les données d'une page.

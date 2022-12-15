@@ -8,8 +8,6 @@ import edu.grimalkin.util.JSONUtil;
 import edu.grimalkin.util.ZipUtil;
 
 /**
- * @author Dimitri
- * @version 1.1
  * Une classe "Library" représentant une bibliothèque de comics
  * Une bibliothèque est composée d'un ensemble de comics (Comic.java)
  * La classe encapsule plusieurs méthodes permettant de manipuler les données d'une bibliothèque.
@@ -102,6 +100,9 @@ public class Library {
         }
     }
 
+    /**
+     * Méthode permettant d'initialiser les comics de la bibliothèque
+     */
     public void initComics() {
         // for each comic in library
         // get path of comics in library
@@ -137,7 +138,10 @@ public class Library {
         }
         updateCovers();
     }
-
+    
+    /**
+     * Méthode permettant de mettre à jour les couvertures des comics de la bibliothèque
+    */
     private void updateCovers() {
         for (Comic comic : comics) {
             comic.setCover(comic.getPages().get(0).getImage());

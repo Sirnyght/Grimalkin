@@ -5,12 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author Dimitri
- * @version 1.3
  * Une classe "Comic" représentant un comic book (Bande dessinée, comic US, manga, etc.)
  * Un comic est composé d'un ensemble de pages (Page.java)
  * La classe encapsule plusieurs méthodes permettant de manipuler les données d'un comic.
- *
  */
 public class Comic {
     private String id;
