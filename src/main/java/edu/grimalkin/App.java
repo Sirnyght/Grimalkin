@@ -1,4 +1,6 @@
 package edu.grimalkin;
+// javadoc -d javadoc -classpath '*.jar' -sourcepath 'src\main\java' edu.grimalkin edu.grimalkin.data edu.grimalkin.ui edu.grimalkin.util 
+// Command used to generate javadoc with all dependencies
 
 // import com.formdev.flatlaf.intellijthemes.FlatNordIJTheme;
 import com.formdev.flatlaf.intellijthemes.FlatOneDarkIJTheme;
@@ -13,7 +15,7 @@ import edu.grimalkin.ui.MainWindow;
  */
 public class App {
     private static final String APP_NAME = "Grimalkin";
-    private static final String APP_VERSION = "0.8a";
+    private static final String APP_VERSION = "0.9b";
     private static final String APP_AUTHOR = "Dimitri Hude & Laure Blanchard";
     private static final String SUPPORTED_FORMATS = "cbz, cbr";
     private static final String SUPPORTED_FORMATS_DESCRIPTION = "Comic Book Archives";
