@@ -111,6 +111,13 @@ public class ZipUtil {
         }
     }
 
+    
+    /** 
+     * @param source
+     * @param destination
+     * @throws IOException
+     * @throws RarException
+     */
     public static void unrar(File source, List<Page> destination) throws IOException, RarException {
         Junrar.extract(source, source.getParentFile());
         File[] files = source.getParentFile().listFiles();

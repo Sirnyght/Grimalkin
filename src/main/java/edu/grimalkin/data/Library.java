@@ -130,7 +130,6 @@ public class Library {
                 comics.get(i).getPages().get(0).getId();
             }
         }
-
         try {
             JSONUtil.writeJSONFile(this);
         } catch (Exception e) {

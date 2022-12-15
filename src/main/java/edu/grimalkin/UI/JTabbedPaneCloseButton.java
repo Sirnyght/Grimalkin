@@ -29,11 +29,22 @@ public class JTabbedPaneCloseButton extends JTabbedPane {
         setTabComponentAt(count, new CloseButtonTab(component, title, icon));
     }
 
+    
+    /** 
+     * @param title
+     * @param icon
+     * @param component
+     */
     @Override
     public void addTab(String title, Icon icon, Component component) {
         addTab(title, icon, component, null);
     }
 
+    
+    /** 
+     * @param title
+     * @param component
+     */
     @Override
     public void addTab(String title, Component component) {
         addTab(title, null, component);
@@ -50,10 +61,21 @@ public class JTabbedPaneCloseButton extends JTabbedPane {
         super.addTab(title, icon, component, tip);
     }
 
+    
+    /** 
+     * @param title
+     * @param icon
+     * @param component
+     */
     public void addTabNoExit(String title, Icon icon, Component component) {
         addTabNoExit(title, icon, component, null);
     }
 
+    
+    /** 
+     * @param title
+     * @param component
+     */
     public void addTabNoExit(String title, Component component) {
         addTabNoExit(title, null, component);
     }

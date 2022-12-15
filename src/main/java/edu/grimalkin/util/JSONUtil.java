@@ -11,7 +11,7 @@ import edu.grimalkin.data.Library;
 /**
  * Classe utilitaire pour la manipulation de fichiers JSON
  * La classe encapsule plusieurs méthodes permettant de manipuler les données d'un fichier JSON.
- * La classe utilise la librairie JSON.simple.
+ * La classe utilise la librairie google Gson.
  * @see <a href="https://code.google.com/archive/p/json-simple/">JSON.simple</a>
  */
 public class JSONUtil {

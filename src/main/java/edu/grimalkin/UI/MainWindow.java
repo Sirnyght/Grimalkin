@@ -35,9 +35,12 @@ public class MainWindow extends JFrame {
 	// Right pane
 	private JTabbedPaneCloseButton rightPane = new JTabbedPaneCloseButton();
 	private JPanel quickstartPanel = new JPanel();
+	private JDialog shortcutsDialog = new JDialog();
+	private JDialog aboutDialog = new JDialog();
 	private final JList<String> shortcutsList = new JList<>(new String[] {
 		"Open: Ctrl + O",
 		"Close: Ctrl + W",
+		"Delete: Ctrl + D",
 		"Exit: Ctrl + Q",
 		"No Rotation (0): Ctrl + Alt + 1",
 		"90 degrees clockwise (1): Ctrl + Alt + 2",
@@ -47,14 +50,14 @@ public class MainWindow extends JFrame {
 		"Previous page: Ctrl + P, Left arrow",
 		"Next page: Ctrl + B, Right arrow",
 		"Last page: Ctrl + L",
+		"Go to page: Ctrl + G",
 		"Zoom in: Ctrl + +",
 		"Zoom out: Ctrl + -",
 		"Custom zoom: Ctrl + 0",
 		"Original fit: Ctrl + Alt + O",
 		"Zoom to fit width: Ctrl + Alt + W",
 		"Zoom to fit height: Ctrl + Alt + H",
-		"Shortcuts: Ctrl + /",
-		"About: Ctrl + A"
+		"Shortcuts: Ctrl + /"
 	});
 
 	/**
@@ -98,6 +101,7 @@ public class MainWindow extends JFrame {
 		JMenuBar menuBar = new JMenuBar();
         JMenu fileMenu = new JMenu();
 		JMenuItem openMenuItem = new JMenuItem();
+		JMenuItem deleteMenuItem = new JMenuItem();
 		JMenuItem closeMenuItem = new JMenuItem();
 		JMenuItem exitMenuItem = new JMenuItem();
 		JMenu editMenu = new JMenu();
@@ -111,6 +115,7 @@ public class MainWindow extends JFrame {
 		JMenuItem previousPageMenuItem = new JMenuItem();
 		JMenuItem nextPageMenuItem = new JMenuItem();
 		JMenuItem lastPageMenuItem = new JMenuItem();
+		JMenuItem goToPageMenuItem = new JMenuItem();
 		JMenu viewMenu = new JMenu();
 		JMenuItem originalFitMenuItem = new JMenuItem();
 		JMenuItem fitToWidthMenuItem = new JMenuItem();
@@ -136,6 +141,14 @@ public class MainWindow extends JFrame {
 					openMenuItem.setMnemonic((int)'O');
 					openMenuItem.addActionListener(e -> openActionPerformed());
 					fileMenu.add(openMenuItem);
+				}
+				// Delete Menu Item Setup
+				{
+					deleteMenuItem.setText("Delete");
+					deleteMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()));
+					deleteMenuItem.setMnemonic((int)'D');
+					deleteMenuItem.addActionListener(e -> deleteActionPerformed());
+					fileMenu.add(deleteMenuItem);
 				}
 				// Close Menu Item Setup
 				{
@@ -235,6 +248,14 @@ public class MainWindow extends JFrame {
 					lastPageMenuItem.setMnemonic((int)'L');
 					lastPageMenuItem.addActionListener(e -> goToLastPageActionPerformed());
 					readMenu.add(lastPageMenuItem);
+				}
+				// Go To Page Menu Item Setup
+				{
+					goToPageMenuItem.setText("Go To Page");
+					goToPageMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_G, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()));
+					goToPageMenuItem.setMnemonic((int)'G');
+					goToPageMenuItem.addActionListener(e -> goToPageActionPerformed());
+					readMenu.add(goToPageMenuItem);
 				}
 				menuBar.add(readMenu);
 			}
@@ -404,7 +425,6 @@ public class MainWindow extends JFrame {
 		updateLibrary();
 	}
 
-
 	/**
 	 * Méthode permettant d'afficher un comic dans le panneau de droite
 	 * @param comic Comic à afficher
@@ -438,7 +458,9 @@ public class MainWindow extends JFrame {
 					// if comic is not open
 					// add new tab to right pane
 					JPanel comicPagesPanel = new JPanel();
+
 					JScrollPane comicPageScrollPane = new JScrollPane();
+
 					JPanel comicPagePanel = new JPanel();
 					{
 						comicPagesPanel.setLayout(new BorderLayout());
@@ -482,14 +504,18 @@ public class MainWindow extends JFrame {
 	 * @see #displayPage(Page, JPanel)
 	 */
 	private void displayPage(Page page, JPanel comicPagePanel) {
-		// Get Scroll Pane
+		// Get Scroll Pane from comicPagePanel
+		JScrollPane comicPageScrollPane = (JScrollPane) ((JPanel) rightPane.getComponentAt(rightPane.getSelectedIndex())).getComponent(0);
+		// Get Scroll Pane width
 		// Remove all components from comicPagePanel
 		comicPagePanel.removeAll();
+		// wait for components to init
+		int width = comicPageScrollPane.getWidth();
 		// Get Comic Page Image
 		ImageIcon icon = new ImageIcon(page.getImage());
 		// Resize only image width and keep aspect ratio	
 		Image img = icon.getImage();
-		Image newimg = img.getScaledInstance(600, -1,  java.awt.Image.SCALE_SMOOTH);
+		Image newimg = img.getScaledInstance(width-30, -1,  java.awt.Image.SCALE_SMOOTH);
 		icon = new ImageIcon(newimg);
 		// New Comic Page Label
 		JLabel comicPageLabel = new JLabel();
@@ -653,6 +679,33 @@ public class MainWindow extends JFrame {
 		}
 	}
 
+	/**
+	 * Méthode permettant de supprimer le comic courant de la librairie
+	 * @see #updateLibrary()
+	 */
+	private void deleteActionPerformed() {
+		// get selected tab
+		int selectedTab = rightPane.getSelectedIndex();
+		// get selected tab title
+		String selectedTabTitle = rightPane.getTitleAt(selectedTab);
+		// remove comic from library
+		library.removeComic(selectedTabTitle);
+		// remove comic from right pane
+		rightPane.remove(rightPane.getSelectedIndex());
+		// remove comic thumbnail from left pane
+		// get component index 
+		int componentIndex = 0;
+		for (int i = 0; i < thumbnailsPanel.getComponentCount(); i++) {
+			if (thumbnailsPanel.getComponent(i).getName().equals(selectedTabTitle)) {
+				componentIndex = i;
+			}
+		}
+		thumbnailsPanel.remove(thumbnailsPanel.getComponent(componentIndex));
+		// update library
+		updateLibrary();
+	}
+
+
     /**
 	 * Méthode permettant de ferme une page dans le panneau de droite
 	 * Sauvegarde la page courante du comic
@@ -667,7 +720,6 @@ public class MainWindow extends JFrame {
 		updateComic(selectedTabTitle, library.getComic(selectedTabTitle).getCurrentPage());
 		// Close Tab
 		rightPane.remove(rightPane.getSelectedIndex());
-
 	}
 
 	/**
@@ -701,18 +753,34 @@ public class MainWindow extends JFrame {
 	private void RotationActionPerformed(ActionEvent e) {
 		// get selected tab
 		int selectedTab = rightPane.getSelectedIndex();
-		// get image icon from selected tab
-		ImageIcon icon = (ImageIcon) ((JLabel) ((JScrollPane) ((JPanel) rightPane.getComponentAt(selectedTab)).getComponent(0)).getViewport().getView()).getIcon();
+		// get panel from selected tab
+		JPanel panel = (JPanel) rightPane.getComponentAt(selectedTab);
+		// get scroll pane from panel
+		JScrollPane scrollPane = (JScrollPane) panel.getComponent(0);
+		// get panel from scroll pane
+		JPanel pagePanel = (JPanel) scrollPane.getViewport().getView();
+		// get image label from panel
+		JLabel imageLabel = (JLabel) pagePanel.getComponent(0);
+		// get image icon from image label
+		ImageIcon icon = (ImageIcon) imageLabel.getIcon();
 		// rotate image icon by e degrees
 		Image img = icon.getImage();
 		Image newimg = img.getScaledInstance(img.getWidth(null), img.getHeight(null),  java.awt.Image.SCALE_SMOOTH);
+		// put newimg in a buffered image
+		BufferedImage bimage = new BufferedImage(newimg.getWidth(null), newimg.getHeight(null), BufferedImage.TYPE_INT_ARGB);
 		AffineTransform tx = new AffineTransform();
-		tx.rotate(Math.toRadians(Integer.parseInt(e.getActionCommand())), newimg.getWidth(null)/2, newimg.getHeight(null)/2);
+		if (e.getActionCommand().equals("90°")) {
+			tx.rotate(Math.toRadians(90), newimg.getWidth(null)/2, newimg.getHeight(null)/2);
+		} else if (e.getActionCommand().equals("180°")) {
+			tx.rotate(Math.toRadians(180), newimg.getWidth(null)/2, newimg.getHeight(null)/2);
+		} else if (e.getActionCommand().equals("270°")) {
+			tx.rotate(Math.toRadians(270), newimg.getWidth(null)/2, newimg.getHeight(null)/2);
+		}
 		AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);
-		newimg = op.filter((BufferedImage) newimg, null);
+		newimg = op.filter(bimage, null);
 		icon = new ImageIcon(newimg);
 		// update image icon
-		((JLabel) ((JScrollPane) ((JPanel) rightPane.getComponentAt(selectedTab)).getComponent(0)).getViewport().getView()).setIcon(icon);
+		imageLabel.setIcon(icon);
 	}
 
 	/**
@@ -730,28 +798,36 @@ public class MainWindow extends JFrame {
 		updateComic(selectedTabTitle, library.getComic(selectedTabTitle).getCurrentPage());
 		// get comic
 		Comic comic = library.getComic(selectedTabTitle);
-		// next page 
-		comic.nextPage();
-		// get comic page
-		Page page = comic.getPages().get(comic.getCurrentPage());
-		// get comic page image
-		ImageIcon icon = new ImageIcon(page.getImage());
-		// resize only image width and keep aspect ratio
-		Image img = icon.getImage();
-		Image newimg = img.getScaledInstance(600, -1,  java.awt.Image.SCALE_SMOOTH);
-		icon = new ImageIcon(newimg);
-		// get comic page scroll panel 
-		JScrollPane comicPageScrollPanel = (JScrollPane) ((JPanel) rightPane.getComponentAt(selectedTab)).getComponent(0);
-		// get comic page panel
-		JPanel comicPagePanel = (JPanel) comicPageScrollPanel.getViewport().getView();
-		// get comic page label from comic page panel
-		JLabel comicPageLabel = (JLabel) comicPagePanel.getComponent(0);
-		// set comic page label icon
-		comicPageLabel.setIcon(icon);
-		// update comic page panel
-		comicPagePanel.revalidate();
-		comicPagePanel.repaint();
-		updateComic(selectedTabTitle, comic.getCurrentPage());
+		if (comic.getCurrentPage()+1 >= comic.getPageCount()) {
+			// Display error message popup
+			JOptionPane.showMessageDialog(null, "This is the last page", "Error", JOptionPane.ERROR_MESSAGE);
+		}
+		else {
+			// next page 
+			comic.nextPage();
+			// get comic page
+			Page page = comic.getPages().get(comic.getCurrentPage());
+			// get comic page image
+			ImageIcon icon = new ImageIcon(page.getImage());
+			// resize only image width and keep aspect ratio
+			Image img = icon.getImage();
+			// get comic page scroll panel 
+			JScrollPane comicPageScrollPanel = (JScrollPane) ((JPanel) rightPane.getComponentAt(selectedTab)).getComponent(0);
+			// get comic page scroll panel width
+			int width = comicPageScrollPanel.getWidth();
+			Image newimg = img.getScaledInstance(width-30, -1,  java.awt.Image.SCALE_SMOOTH);
+			icon = new ImageIcon(newimg);
+			// get comic page panel
+			JPanel comicPagePanel = (JPanel) comicPageScrollPanel.getViewport().getView();
+			// get comic page label from comic page panel
+			JLabel comicPageLabel = (JLabel) comicPagePanel.getComponent(0);
+			// set comic page label icon
+			comicPageLabel.setIcon(icon);
+			// update comic page panel
+			comicPagePanel.revalidate();
+			comicPagePanel.repaint();
+			updateComic(selectedTabTitle, comic.getCurrentPage());
+		}
 	}
 
 	/**
@@ -769,28 +845,36 @@ public class MainWindow extends JFrame {
 		updateComic(selectedTabTitle, library.getComic(selectedTabTitle).getCurrentPage());
 		// get comic
 		Comic comic = library.getComic(selectedTabTitle);
-		// previous page 
-		comic.previousPage();
-		// get comic page
-		Page page = comic.getPages().get(comic.getCurrentPage());
-		// get comic page image
-		ImageIcon icon = new ImageIcon(page.getImage());
-		// resize only image width and keep aspect ratio
-		Image img = icon.getImage();
-		Image newimg = img.getScaledInstance(600, -1,  java.awt.Image.SCALE_SMOOTH);
-		icon = new ImageIcon(newimg);
-		// get comic page scroll panel 
-		JScrollPane comicPageScrollPanel = (JScrollPane) ((JPanel) rightPane.getComponentAt(selectedTab)).getComponent(0);
-		// get comic page panel
-		JPanel comicPagePanel = (JPanel) comicPageScrollPanel.getViewport().getView();
-		// get comic page label from comic page panel
-		JLabel comicPageLabel = (JLabel) comicPagePanel.getComponent(0);
-		// set comic page label icon
-		comicPageLabel.setIcon(icon);
-		// update comic page panel
-		comicPagePanel.revalidate();
-		comicPagePanel.repaint();
-		updateComic(selectedTabTitle, comic.getCurrentPage());
+		if (comic.getCurrentPage()-1 < 0) {
+			// Display error message popup
+			JOptionPane.showMessageDialog(null, "This is the first page", "Error", JOptionPane.ERROR_MESSAGE);
+		}
+		else {
+			// previous page 
+			comic.previousPage();
+			// get comic page
+			Page page = comic.getPages().get(comic.getCurrentPage());
+			// get comic page image
+			ImageIcon icon = new ImageIcon(page.getImage());
+			// resize only image width and keep aspect ratio
+			Image img = icon.getImage();
+			// get comic page scroll panel 
+			JScrollPane comicPageScrollPanel = (JScrollPane) ((JPanel) rightPane.getComponentAt(selectedTab)).getComponent(0);
+			// get comic page scroll panel width
+			int width = comicPageScrollPanel.getWidth();
+			Image newimg = img.getScaledInstance(width-30, -1,  java.awt.Image.SCALE_SMOOTH);
+			icon = new ImageIcon(newimg);
+			// get comic page panel
+			JPanel comicPagePanel = (JPanel) comicPageScrollPanel.getViewport().getView();
+			// get comic page label from comic page panel
+			JLabel comicPageLabel = (JLabel) comicPagePanel.getComponent(0);
+			// set comic page label icon
+			comicPageLabel.setIcon(icon);
+			// update comic page panel
+			comicPagePanel.revalidate();
+			comicPagePanel.repaint();
+			updateComic(selectedTabTitle, comic.getCurrentPage());
+		}
 	}
 
 	/**
@@ -816,10 +900,12 @@ public class MainWindow extends JFrame {
 		ImageIcon icon = new ImageIcon(page.getImage());
 		// resize only image width and keep aspect ratio
 		Image img = icon.getImage();
-		Image newimg = img.getScaledInstance(600, -1,  java.awt.Image.SCALE_SMOOTH);
-		icon = new ImageIcon(newimg);
 		// get comic page scroll panel 
 		JScrollPane comicPageScrollPanel = (JScrollPane) ((JPanel) rightPane.getComponentAt(selectedTab)).getComponent(0);
+		// get comic page scroll panel width
+		int width = comicPageScrollPanel.getWidth();
+		Image newimg = img.getScaledInstance(width-30, -1,  java.awt.Image.SCALE_SMOOTH);
+		icon = new ImageIcon(newimg);
 		// get comic page panel
 		JPanel comicPagePanel = (JPanel) comicPageScrollPanel.getViewport().getView();
 		// get comic page label from comic page panel
@@ -855,10 +941,10 @@ public class MainWindow extends JFrame {
 		ImageIcon icon = new ImageIcon(page.getImage());
 		// resize only image width and keep aspect ratio
 		Image img = icon.getImage();
-		Image newimg = img.getScaledInstance(600, -1,  java.awt.Image.SCALE_SMOOTH);
-		icon = new ImageIcon(newimg);
 		// get comic page scroll panel 
 		JScrollPane comicPageScrollPanel = (JScrollPane) ((JPanel) rightPane.getComponentAt(selectedTab)).getComponent(0);
+		Image newimg = img.getScaledInstance(600, -1,  java.awt.Image.SCALE_SMOOTH);
+		icon = new ImageIcon(newimg);
 		// get comic page panel
 		JPanel comicPagePanel = (JPanel) comicPageScrollPanel.getViewport().getView();
 		// get comic page label from comic page panel
@@ -869,6 +955,59 @@ public class MainWindow extends JFrame {
 		comicPagePanel.revalidate();
 		comicPagePanel.repaint();
 		updateComic(selectedTabTitle, comic.getCurrentPage());
+	}
+
+	/**
+	 * Méthode permettant d'aller à une page donnée
+	 */
+	private void goToPageActionPerformed() {
+		// get selected tab
+		int selectedTab = rightPane.getSelectedIndex();
+		// get selected tab title
+		String selectedTabTitle = rightPane.getTitleAt(selectedTab);
+		// get comic
+		Comic comic = library.getComic(selectedTabTitle);
+		// Ask user for page number
+		String input = JOptionPane.showInputDialog("Page number :");
+		// if user input is not null
+		if (input != null) {
+			// if user input is a number
+			if (input.matches("[0-9]+")) {
+				// if user input is a valid page number
+				if (Integer.parseInt(input) <= comic.getPages().size() && Integer.parseInt(input) > 0) {
+					// save comic current page
+					updateComic(selectedTabTitle, library.getComic(selectedTabTitle).getCurrentPage());
+					// go to page
+					comic.setCurrentPage(Integer.parseInt(input) - 1);
+					// get comic page
+					Page page = comic.getPages().get(comic.getCurrentPage());
+					// get comic page image
+					ImageIcon icon = new ImageIcon(page.getImage());
+					// resize only image width and keep aspect ratio
+					Image img = icon.getImage();
+					// get comic page scroll panel 
+					JScrollPane comicPageScrollPanel = (JScrollPane) ((JPanel) rightPane.getComponentAt(selectedTab)).getComponent(0);
+					int width = comicPageScrollPanel.getWidth();
+					Image newimg = img.getScaledInstance(width-30, -1,  java.awt.Image.SCALE_SMOOTH);
+					icon = new ImageIcon(newimg);
+					// get comic page panel
+					JPanel comicPagePanel = (JPanel) comicPageScrollPanel.getViewport().getView();
+					// get comic page label from comic page panel
+					JLabel comicPageLabel = (JLabel) comicPagePanel.getComponent(0);
+					// set comic page label icon
+					comicPageLabel.setIcon(icon);
+					// update comic page panel
+					comicPagePanel.revalidate();
+					comicPagePanel.repaint();
+					updateComic(selectedTabTitle, comic.getCurrentPage());
+				} else {
+					JOptionPane.showMessageDialog(null, "Invalid page number", "Error", JOptionPane.ERROR_MESSAGE);
+				}
+			} else {
+				JOptionPane.showMessageDialog(null, "Invalid page number", "Error", JOptionPane.ERROR_MESSAGE);
+			}
+		}
+		
 	}
 
 	/**
@@ -1093,8 +1232,6 @@ public class MainWindow extends JFrame {
 	 * Méthode permettant de mettre la page courante de l'onglet sélectionné à la taille de l'écran
 	 */
 	private void shortcutsActionPerformed() {
-		// create shortcuts dialog
-		JDialog shortcutsDialog = new JDialog();
 		// set shortcuts dialog title
 		shortcutsDialog.setTitle("Shortcuts");
 		// set shortcuts dialog size
@@ -1123,8 +1260,6 @@ public class MainWindow extends JFrame {
 	 * Méthode permettant de mettre la page courante de l'onglet sélectionné à la taille de l'écran
 	 */
 	private void aboutActionPerformed() {
-		// create about dialog
-		JDialog aboutDialog = new JDialog();
 		// set about dialog title
 		aboutDialog.setTitle("About");
 		// set about dialog size
@@ -1182,8 +1317,55 @@ public class MainWindow extends JFrame {
 		updateLibrary();
 		// close all tabs
 		closeAllTabs();
+		// dispose dialogs
+		// dispose shortcuts dialog
+		shortcutsDialog.dispose();
+		// dispose about dialog
+		aboutDialog.dispose();
 		// dispose frame
 		dispose();
 	}
+
 	
+	/** 
+	 * @param e
+	 */
+	// get key pressed inside of window
+	public void keyPressed(KeyEvent e) {
+		System.out.println(e.getKeyCode());
+		// get selected tab
+		int selectedTab = rightPane.getSelectedIndex();
+		// get selected tab title
+		String selectedTabTitle = rightPane.getTitleAt(selectedTab);
+		// get comic page scroll panel 
+		JScrollPane comicPageScrollPanel = (JScrollPane) ((JPanel) rightPane.getComponentAt(selectedTab)).getComponent(0);
+		// get comic page panel
+		JPanel comicPagePanel = (JPanel) comicPageScrollPanel.getViewport().getView();
+		// get comic page label from comic page panel
+		JLabel comicPageLabel = (JLabel) comicPagePanel.getComponent(0);
+		// get comic
+		Comic comic = library.getComic(selectedTabTitle);
+		// get comic page
+		Page page = comic.getPages().get(comic.getCurrentPage());
+		// get comic page icon from panel
+		ImageIcon icon = (ImageIcon) comicPageLabel.getIcon();
+		// get key code
+		int keyCode = e.getKeyCode();
+		// if key code is right arrow
+		if (keyCode == KeyEvent.VK_RIGHT) {
+			// if current page is not the last page
+			if (comic.getCurrentPage() < comic.getPages().size() - 1) {
+				nextPageActionPerformed();
+			}
+		// if key code is left arrow
+		} else if (keyCode == KeyEvent.VK_LEFT) {
+			// if current page is not the first page
+			if (comic.getCurrentPage() > 0) {
+				previousPageActionPerformed();
+			}
+		}
+	}
 }
+
+		
+
