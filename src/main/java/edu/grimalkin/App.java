@@ -1,9 +1,5 @@
 package edu.grimalkin;
 
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-
-
 // import com.formdev.flatlaf.intellijthemes.FlatNordIJTheme;
 import com.formdev.flatlaf.intellijthemes.FlatOneDarkIJTheme;
 
@@ -39,18 +35,37 @@ public class App {
         MainWindow.setVisible(true);
     }
 
-    
+    /**
+     * Accesseur en lecture du nom de l'application
+     * @return Nom de l'application
+     */
     public String getAppName() {return APP_NAME;}
+    /**
+     * Accesseur en lecture de la version de l'application
+     * @return Version de l'application
+     */
     public String getAppVersion() {return APP_VERSION;}
+    /**
+     * Accesseur en lecture de l'auteur de l'application
+     * @return Auteur de l'application
+     */
     public String getAppAuthor() {return APP_AUTHOR;}
+    /**
+     * Accesseur en lecture des formats supportés par l'application
+     * @return Formats supportés par l'application
+     */
     public String getSupportedFormats() {return SUPPORTED_FORMATS;}
+    /**
+     * Accesseur en lecture de la description des formats supportés par l'application
+     * @return Description des formats supportés par l'application
+     */
     public String getSupportedFormatsDescription() {return SUPPORTED_FORMATS_DESCRIPTION;}
 
     
     /** 
      * Méthode principale de l'application.
      * Initialise l'interface graphique et lance l'application.
-     * @param args
+     * @param args Arguments passés en ligne de commande (non utilisés)
      */
     public static void main(String[] args) {
         // Set the look and feel to FlatLaf

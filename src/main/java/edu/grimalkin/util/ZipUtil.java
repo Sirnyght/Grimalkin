@@ -39,7 +39,7 @@ public class ZipUtil {
      * Méthode permettant de décompresser un fichier dans un fichier destination donné en paramètre.
      * @param source Fichier à décompresser
      * @param destination Dossier de destination
-     * @throws IOException
+     * @throws IOException Retourne une exception si le fichier n'a pas pu être lu
      */
     public static void unzip(File source, File destination) throws IOException {
         try (ZipFile zipFile = new ZipFile(source)) {
@@ -70,11 +70,12 @@ public class ZipUtil {
     }
 
     /**
-     * Méthode permettant de décompresser un fichier dans un objet List<Page> donné en paramètre sans créer de fichier temporaire.
+     * Méthode permettant de décompresser un fichier dans une liste de pages donnée en paramètre sans créer de fichier temporaire.
      * Les fonctions ImageIO.read() et ImageIO.write() ne sont pas utilisées en raison de leur lenteur.
      * Il leur est préféré l'utilisation de la classe Toolkit qui permet de créer une image à partir d'un tableau de bytes.
+     * @param source Fichier à décompresser
      * @param destination Dossier de destination
-     * @throws IOException
+     * @throws IOException Retourne une exception si le fichier n'a pas pu être lu
      */
     public static void unzip(File source, List<Page> destination) throws IOException {
         try (ZipFile zipFile = new ZipFile(source)) {
@@ -113,10 +114,11 @@ public class ZipUtil {
 
     
     /** 
-     * @param source
-     * @param destination
-     * @throws IOException
-     * @throws RarException
+     * Méthode permettant de décompresser un fichier RAR dans une list de pages en destination donné en paramètre.
+     * @param source Fichier à décompresser
+     * @param destination Liste de pages en destination
+     * @throws IOException Retourne une exception si le fichier n'a pas pu lu
+     * @throws RarException Retourne une exception si le fichier n'a pas pu être décompressé
      */
     public static void unrar(File source, List<Page> destination) throws IOException, RarException {
         Junrar.extract(source, source.getParentFile());

@@ -25,18 +25,27 @@ import edu.grimalkin.data.*;
  * Une sélection d'objets Swing est mise en place pour permettre une manipulation plus aisée des composants de la fenêtre.
  */
 public class MainWindow extends JFrame {
+	/** Librairie de comics */
 	private Library library; 
+	/** Panel de la fenêtre principale */
 	private JSplitPane splitPane = new JSplitPane();
-	// Left pane
+	/** Panel de gauche */
 	private JTabbedPane leftPane = new JTabbedPane();
+	/** Panel de la librairie */
 	private JPanel libraryPanel = new JPanel();
+	/** ScrollPane de la librairie */
 	private JScrollPane libraryScrollPane = new JScrollPane();
+	/** Panel des vignettes */
 	private JPanel thumbnailsPanel = new JPanel();
-	// Right pane
+	/** Panel de droite */
 	private JTabbedPaneCloseButton rightPane = new JTabbedPaneCloseButton();
+	/** Panel de l'onglet de démarrage rapide */
 	private JPanel quickstartPanel = new JPanel();
+	/** Fenêtre de dialogue "Raccourcis clavier" */
 	private JDialog shortcutsDialog = new JDialog();
+	/** Fenêtre de dialogue "A propos" */
 	private JDialog aboutDialog = new JDialog();
+	/** Liste des raccourcis claviers des items du menu */
 	private final JList<String> shortcutsList = new JList<>(new String[] {
 		"Open: Ctrl + O",
 		"Close: Ctrl + W",
@@ -62,7 +71,7 @@ public class MainWindow extends JFrame {
 
 	/**
 	 * Constructeur de la classe MainWindow
-	 * @param title
+	 * @param title Titre de la fenêtre principale
 	 */
     public MainWindow(String title) {
 		try {
@@ -80,7 +89,7 @@ public class MainWindow extends JFrame {
  
 	/**
 	 * Méthode permettant d'initialiser la fenêtre principale
-	 * @param title
+	 * @param title Titre de la fenêtre principale
 	 */
     private void initWindow(String title) {
         setTitle(title);
@@ -1311,6 +1320,7 @@ public class MainWindow extends JFrame {
 	/**
 	 * Méthode permettant de mettre à jour la bibliothèque en sauvegardant les informations de chaque comic.
 	 * Cette méthode est appelée lors de la fermeture de l'application.
+	 * @param e Evenement de fermeture de la fenêtre
 	 */
 	public void windowClosing(WindowEvent e) {
 		// save library
@@ -1325,30 +1335,19 @@ public class MainWindow extends JFrame {
 		// dispose frame
 		dispose();
 	}
-
 	
 	/** 
-	 * @param e
+	 * Méthode de changer de page en appuyant sur les flèches du clavier
+	 * @param e Evenement de pression d'une touche du clavier
 	 */
-	// get key pressed inside of window
 	public void keyPressed(KeyEvent e) {
 		System.out.println(e.getKeyCode());
 		// get selected tab
 		int selectedTab = rightPane.getSelectedIndex();
 		// get selected tab title
 		String selectedTabTitle = rightPane.getTitleAt(selectedTab);
-		// get comic page scroll panel 
-		JScrollPane comicPageScrollPanel = (JScrollPane) ((JPanel) rightPane.getComponentAt(selectedTab)).getComponent(0);
-		// get comic page panel
-		JPanel comicPagePanel = (JPanel) comicPageScrollPanel.getViewport().getView();
-		// get comic page label from comic page panel
-		JLabel comicPageLabel = (JLabel) comicPagePanel.getComponent(0);
 		// get comic
 		Comic comic = library.getComic(selectedTabTitle);
-		// get comic page
-		Page page = comic.getPages().get(comic.getCurrentPage());
-		// get comic page icon from panel
-		ImageIcon icon = (ImageIcon) comicPageLabel.getIcon();
 		// get key code
 		int keyCode = e.getKeyCode();
 		// if key code is right arrow

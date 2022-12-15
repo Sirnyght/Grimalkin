@@ -15,12 +15,20 @@ import java.awt.event.MouseEvent;
  */
 public class JTabbedPaneCloseButton extends JTabbedPane {
 
+    /**
+     * Constructeur par défaut
+     * Initialise les attributs à des valeurs par défaut
+     */
     public JTabbedPaneCloseButton() {
         super();
     }
 
     /** 
-     * Override de AddTab pour ajouter un bouton de fermeture à chaque onglet
+     * Override de AddTab pour ajouter un bouton de fermeture à chaque onglet ajouté en prenant quatre paramètres
+     * @param title titre de l'onglet
+     * @param icon icone de l'onglet
+     * @param component composant de l'onglet
+     * @param tip tooltip de l'onglet
      */ 
     @Override
     public void addTab(String title, Icon icon, Component component, String tip) {
@@ -31,9 +39,10 @@ public class JTabbedPaneCloseButton extends JTabbedPane {
 
     
     /** 
-     * @param title
-     * @param icon
-     * @param component
+     * Override de AddTab pour ajouter un bouton de fermeture à chaque onglet ajouté en prenant trois paramètres
+     * @param title titre de l'onglet
+     * @param icon icone de l'onglet
+     * @param component composant de l'onglet
      */
     @Override
     public void addTab(String title, Icon icon, Component component) {
@@ -42,8 +51,9 @@ public class JTabbedPaneCloseButton extends JTabbedPane {
 
     
     /** 
-     * @param title
-     * @param component
+     * Override de AddTab pour ajouter un bouton de fermeture à chaque onglet ajouté en prenant deux paramètres
+     * @param title titre de l'onglet
+     * @param component composant de l'onglet
      */
     @Override
     public void addTab(String title, Component component) {
@@ -51,11 +61,11 @@ public class JTabbedPaneCloseButton extends JTabbedPane {
     }
 
     /**
-     * Méthode permettant d'ajouter un onglet sans bouton de fermeture
-     * @param title
-     * @param icon
-     * @param component
-     * @param tip
+     * Méthode permettant d'ajouter un onglet sans bouton de fermeture en prenant quatre paramètres
+     * @param title titre de l'onglet
+     * @param icon icone de l'onglet
+     * @param component composant de l'onglet
+     * @param tip tooltip de l'onglet
      */
     public void addTabNoExit(String title, Icon icon, Component component, String tip) {
         super.addTab(title, icon, component, tip);
@@ -63,9 +73,10 @@ public class JTabbedPaneCloseButton extends JTabbedPane {
 
     
     /** 
-     * @param title
-     * @param icon
-     * @param component
+     * Méthode permettant d'ajouter un onglet sans bouton de fermeture en prenant trois paramètres
+     * @param title titre de l'onglet
+     * @param icon icone de l'onglet
+     * @param component composant de l'onglet
      */
     public void addTabNoExit(String title, Icon icon, Component component) {
         addTabNoExit(title, icon, component, null);
@@ -73,8 +84,9 @@ public class JTabbedPaneCloseButton extends JTabbedPane {
 
     
     /** 
-     * @param title
-     * @param component
+     * Méthode permettant d'ajouter un onglet sans bouton de fermeture en prenant deux paramètres
+     * @param title titre de l'onglet
+     * @param component composant de l'onglet
      */
     public void addTabNoExit(String title, Component component) {
         addTabNoExit(title, null, component);
@@ -86,8 +98,19 @@ public class JTabbedPaneCloseButton extends JTabbedPane {
      * @see JPanel https://docs.oracle.com/javase/7/docs/api/javax/swing/JPanel.html
      */
     public class CloseButtonTab extends JPanel {
+        /**
+         * Composant de l'onglet
+         * @see Component https://docs.oracle.com/javase/7/docs/api/java/awt/Component.html
+         */
         private Component tab;
 
+        /**
+         * Constructeur par défaut
+         * Initialise les attributs à des valeurs par défaut
+         * @param _tab composant de l'onglet
+         * @param title titre de l'onglet
+         * @param icon icone de l'onglet
+         */
         public CloseButtonTab(final Component _tab, String title, Icon icon) {
             tab = _tab;
             setOpaque(false);
@@ -142,8 +165,14 @@ public class JTabbedPaneCloseButton extends JTabbedPane {
      */
     public class CloseListener implements MouseListener
     {
+        // Attribut privé Component tab
         private Component tab;
 
+        /**
+         * Constructeur par défaut
+         * Initialise les attributs à des valeurs par défaut
+         * @param _tab composant de l'onglet
+         */
         public CloseListener(Component _tab) {
             tab=_tab;
         }

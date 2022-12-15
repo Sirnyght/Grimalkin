@@ -16,7 +16,7 @@ public class Comic {
     private transient Image cover;
     private List<Page> pages;
     private int pageCount;
-    private int currentPage;
+    private int currentPage; 
     private int lastPageRead;
     // private boolean isRead;
 
@@ -73,79 +73,79 @@ public class Comic {
     }
     
     /**
-     * Getter pour l'id du comic
+     * Accesseur en lecture pour l'id du comic
      * @return l'id du comic
      */
     public String getId() {return id;}
     /**
-     * Getter pour le titre du comic
+     * Accesseur en lecture pour le titre du comic
      * @return le titre du comic
      */
     public String getTitle() {return title;}
     /**
-     * Getter pour le chemin d'accès au comic
+     * Accesseur en lecture pour le chemin d'accès au comic
      * @return le chemin d'accès au comic
      */
     public String getPath() {return path;}
     /**
-     * Getter pour la liste des pages du comic
+     * Accesseur en lecture pour la liste des pages du comic
      * @return la liste des pages du comic
      */
     public Image getCover() {return cover;}
     /**
-     * Getter pour la liste des pages du comic
+     * Accesseur en lecture pour la liste des pages du comic
      * @return la liste des pages du comic
      */
     public List<Page> getPages() {return pages;}
     /**
-     * Getter pour la liste des pages du comic
+     * Accesseur en lecture pour la liste des pages du comic
      * @return la liste des pages du comic
      */
     public int getPageCount() {return pageCount;}
     /**
-     * Getter pour la page courante du comic
+     * Accesseur en lecture pour la page courante du comic
      * @return la page courante du comic
      */
     public int getCurrentPage() {return currentPage;}
     /**
-     * Getter pour la dernière page lue du comic
+     * Accesseur en lecture pour la dernière page lue du comic
      * @return la dernière page lue du comic
      */
     public int getLastPageRead() {return lastPageRead;}
 
 
     /**
-     * Setter pour l'id du comic
+     * Accesseur en écriture pour l'id du comic
      * @param _id l'id du comic
      */
     public void setId(String _id) {id = _id;}
     /**
-     * Setter pour le titre du comic
+     * Accesseur en écriture pour le titre du comic
      * @param _title le titre du comic
      */
     public void setTitle(String _title) {title = _title;}
     /**
-     * Setter pour le chemin d'accès au comic
+     * Accesseur en écriture pour le chemin d'accès au comic
      * @param _path le chemin d'accès au comic
      */
     public void setPath(String _path) {path = _path;}
     /**
-     * Setter pour la liste des pages du comic
-     * @param _pages la liste des pages du comic
+     * Accesseur en écriture pour la couverture 
+     * @param _cover la couverture du comic
      */
     public void setCover(Image _cover) {cover = _cover;}
     /**
-     * Setter pour la liste des pages du comic
+     * Accesseur en écriture pour la liste des pages du comic
      * @param _pages la liste des pages du comic
      */
     public void setPages(List<Page> _pages) {pages = _pages;}
     /**
-     * Setter pour la page courante du comic
+     * Accesseur en écriture pour la page courante du comic
      * @param _currentPage la page courante du comic
      */
     public void setCurrentPage(int _currentPage) {currentPage = _currentPage;}
     /**
-     * Setter pour la dernière page lue du comic
+     * Accesseur en écriture pour la dernière page lue du comic
      * @param _lastPageRead la dernière page lue du comic
      */
     public void setLastPageRead(int _lastPageRead) {lastPageRead = _lastPageRead;}

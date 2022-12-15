@@ -16,7 +16,7 @@ import edu.grimalkin.data.Library;
  */
 public class JSONUtil {
     private static final String FILENAME = "Library.json";
-    private static final String LIBRARY_JSON = "C:\\Users\\Kytsune\\Documents\\Cours\\S3\\R3.04_Quali_Dev\\Projet_Java\\Grimalkin\\Library.json";
+    private static final String LIBRARY_JSON = "Library.json";
 
     /**
      * Constructeur privé pour empêcher l'instanciation de la classe.
@@ -30,7 +30,7 @@ public class JSONUtil {
     /**
      * Méthode permettant d'écrire un fichier JSON depuis un objet Library.
      * @param library Bibliothèque à écrire
-     * @throws IOException
+     * @throws IOException retourne une exception si le fichier n'a pas pu être écrit
      */
     public static void writeJSONFile(Library library) throws IOException {
         // Write JSON file
@@ -44,7 +44,7 @@ public class JSONUtil {
     /**
      * Méthode permettant de lire un fichier JSON et de le convertir en objet Library.
      * @return Library
-     * @throws IOException
+     * @throws IOException retourne une exception si le fichier n'a pas pu être lu
      */
     public static Library readJSONFile() throws IOException {
         // Read JSON file
