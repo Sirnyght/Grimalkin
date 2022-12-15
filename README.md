@@ -31,7 +31,7 @@ Here are some screenshots of the application:
 
 ![Comic view page](https://i.imgur.com/MKtsvKA.png)*A comic opened in the application*
 
-![Fullscreen comic view](hhttps://i.imgur.com/AQ80coI.png)*A comic opened in fullscreen mode*
+![Fullscreen comic view](https://i.imgur.com/AQ80coI.png)*A comic opened in fullscreen mode*
 
 ## Installation
 Download the repository, including the library folder, then using your favorite IDE, compile and run the project.
