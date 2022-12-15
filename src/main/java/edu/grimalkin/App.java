@@ -4,6 +4,7 @@ package edu.grimalkin;
 import com.formdev.flatlaf.intellijthemes.FlatOneDarkIJTheme;
 
 import edu.grimalkin.ui.MainWindow;
+import edu.grimalkin.data.Library;
 
 
 public class App {

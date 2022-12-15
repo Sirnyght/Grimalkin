@@ -1,7 +1,6 @@
-package edu.grimalkin.util;
+package edu.grimalkin.ui;
 
 import javax.swing.*;
-import javax.swing.plaf.metal.MetalIconFactory;
 import java.awt.*;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseEvent;
