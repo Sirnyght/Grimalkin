@@ -4,8 +4,6 @@ import java.awt.Image;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.grimalkin.util.ZipUtil;
-
 /**
  * @author Dimitri
  * @version 1.3

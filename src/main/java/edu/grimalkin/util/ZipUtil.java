@@ -14,7 +14,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import javax.imageio.ImageIO;
 
-import edu.grimalkin.data.Comic;
 import edu.grimalkin.data.Page;
 
 /**

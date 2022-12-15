@@ -4,14 +4,12 @@ package edu.grimalkin;
 import com.formdev.flatlaf.intellijthemes.FlatOneDarkIJTheme;
 
 import edu.grimalkin.ui.MainWindow;
-import edu.grimalkin.data.Library;
 
 
 public class App {
     private static final String APP_NAME = "Grimalkin";
     private static final String APP_VERSION = "0.1a";
     private static final String APP_AUTHOR = "Dimitri Hude & Laure Blanchard";
-    // private static final String SUPPORTED_FORMATS = "cbz, cbr, zip, rar";
     private static final String SUPPORTED_FORMATS = "cbz, cbr";
     private static final String SUPPORTED_FORMATS_DESCRIPTION = "Comic Book Archives";
 

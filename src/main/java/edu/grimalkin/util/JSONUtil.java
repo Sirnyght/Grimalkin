@@ -6,12 +6,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 
 import com.google.gson.*;
-import com.google.gson.annotations.*;
-import com.google.gson.reflect.*;
-import com.google.gson.stream.*;
-import com.google.gson.internal.*;
-
-import edu.grimalkin.data.Comic;
 import edu.grimalkin.data.Library;
 
 /**
