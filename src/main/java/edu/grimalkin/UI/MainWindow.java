@@ -515,13 +515,13 @@ public class MainWindow extends JFrame {
 					comicPageScrollPane.getHorizontalScrollBar().setUnitIncrement(16);
 					comicPageFrame.add(comicPageScrollPane);
 					// Add Comic Page Panel to Scroll Pane
-					JPanel comicPagePanel = new JPanel();
-					comicPagePanel.setLayout(new BorderLayout());
-					comicPageScrollPane.setViewportView(comicPagePanel);
+					JPanel comicPagePanelFullscreen = new JPanel();
+					comicPagePanelFullscreen.setLayout(new BorderLayout());
+					comicPageScrollPane.setViewportView(comicPagePanelFullscreen);
 					// Add Comic Page Label to Comic Page Panel
 					JLabel comicPageLabelFullscreen = new JLabel();
 					comicPageLabelFullscreen.setIcon(comicPageLabel.getIcon());
-					comicPagePanel.add(comicPageLabelFullscreen, BorderLayout.CENTER);
+					comicPagePanelFullscreen.add(comicPageLabelFullscreen, BorderLayout.CENTER);
 					// Update Comic Page Frame
 					comicPageFrame.revalidate();
 					comicPageFrame.repaint();
@@ -530,6 +530,14 @@ public class MainWindow extends JFrame {
 						@Override
 						public void componentResized(ComponentEvent e) {
 							// Get Comic Page Image
+							// Get tab pane
+							JTabbedPane tabbedPane = (JTabbedPane) comicPagePanel.getParent().getParent().getParent().getParent();
+							// Get tab name
+							String tabName = tabbedPane.getTitleAt(tabbedPane.getSelectedIndex());
+							// Get Comic
+							Comic comic = library.getComic(tabName);
+							// Get Comic Page
+							Page page = comic.getPages().get(comic.getCurrentPage());
 							ImageIcon icon = new ImageIcon(page.getImage());
 							// Resize only image width and keep aspect ratio	
 							Image img = icon.getImage();
